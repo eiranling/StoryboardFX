@@ -1,0 +1,26 @@
+.badge {
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.5), 5, 0, 0, 0);;
+    -fx-font-weight: BOLD;
+    -fx-padding: 5 5 5 5;
+    -fx-border-insets: 2 2 2 2;
+    -fx-background-insets: 2 2 2 2;
+    -fx-font-size: 10px;
+}
+
+.badge-success {
+    -fx-background-color: #11FF11;
+}
+
+.badge-failure {
+    -fx-background-color: #FF1111;
+}
+
+.badge-pending {
+    -fx-background-color: rgba(200, 200, 25, 1);
+}
+
+.badge-info {
+    -fx-background-color: rgba(100, 120, 255, 1);
+}
