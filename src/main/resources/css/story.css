@@ -1,0 +1,7 @@
+.story {
+    -fx-background-color: WHITE;
+    -fx-border-width: 1 2 4 1;
+    -fx-border-color: #CFCFCF;
+    -fx-border-radius: 5;
+    -fx-background-radius: 6;
+}
