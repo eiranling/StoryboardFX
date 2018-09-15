@@ -13,28 +13,15 @@ public class App extends Application {
         Stage stage = new Stage();
         AnchorPane anchorPane = new AnchorPane();
 
-        Story story = new Story();
-
-        stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode().equals(KeyCode.A)) {
-                story.addBadge(BadgeType.BADGE_FAILURE);
-            }
-        });
-
-        stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode().equals(KeyCode.M)) {
-                story.removeBadge(BadgeType.BADGE_FAILURE);
-            }
-        });
-
-        stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode().equals(KeyCode.D)) {
-                story.addBadge("Blood Test", "badge-failure");
-            }
-        });
-
         Storyboard storyboard = new Storyboard();
-        storyboard.addStory(story);
+
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                Story temp = new Story();
+                temp.setTitle("Story ");
+                storyboard.addStory(temp);
+            }
+        });
 
         anchorPane.getChildren().add(storyboard);
 
