@@ -57,6 +57,11 @@ public class Storyboard extends AnchorPane {
         return titleTextProperty().getValue();
     }
 
+    @FXML
+    public void addStory() {
+        this.addStory(new Story());
+    }
+
     public void addStory(Story story) {
         storyContainer.setSpacing(5);
         storyContainer.getChildren().add(story);

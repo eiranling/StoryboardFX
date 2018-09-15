@@ -2,3 +2,22 @@
     -fx-background-radius: 5;
     -fx-border-radius: 5;
 }
+
+.storyboard-button {
+    -fx-padding: 0 0 0 0;
+    -fx-font-weight: BOLDER;
+    -fx-font-size: 25;
+    -fx-text-fill: GREY;
+    -fx-background-color: TRANSPARENT;
+    -fx-border-radius: 5em;
+    -fx-background-radius: 5em;
+}
+
+.storyboard-button:hover {
+    -fx-text-fill: #404040;
+}
+
+
+.storyboard-button:pressed {
+    -fx-text-fill: #101010;
+}
