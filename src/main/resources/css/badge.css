@@ -7,6 +7,8 @@
     -fx-border-insets: 2 2 2 2;
     -fx-background-insets: 2 2 2 2;
     -fx-font-size: 10px;
+    -fx-background-color: BLACK;
+    -fx-text-fill: WHITE;
 }
 
 .badge-success {
