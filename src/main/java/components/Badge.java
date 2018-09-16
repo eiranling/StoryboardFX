@@ -76,4 +76,8 @@ public class Badge extends Label {
             throw new RuntimeException(exception);
         }
     }
+
+    public BadgeType getBadgeType() {
+        return BadgeType.BADGE_SUCCESS;
+    }
 }
