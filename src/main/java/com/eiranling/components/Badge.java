@@ -1,6 +1,6 @@
-package components;
+package com.eiranling.components;
 
-import _enum.BadgeType;
+import com.eiranling._enum.BadgeType;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXMLLoader;

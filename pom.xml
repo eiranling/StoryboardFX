@@ -4,9 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>eiranling</groupId>
+    <groupId>com.eiranling</groupId>
     <artifactId>StoryboardFX</artifactId>
-    <version>0.0</version>
+    <version>0.1</version>
+
+    <name>StoryboardFX</name>
+    <description>Highly customizable com.eiranling.widgets for creating interactive storyboards</description>
+    <url>github.com/eiranling/StoryboardFX</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <build>
         <plugins>
             <plugin>
@@ -19,14 +32,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.5</version>
-        </dependency>
-    </dependencies>
 
 
 </project>

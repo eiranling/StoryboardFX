@@ -1,4 +1,4 @@
-package _enum;
+package com.eiranling._enum;
 
 public enum BadgeType {
     BADGE_DEFAULT("Badge", "badge-default"),

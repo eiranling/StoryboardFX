@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<fx:root prefHeight="464.0" prefWidth="224.0" styleClass="storyboard"
-         stylesheets="@../css/storyboard.css, @../css/generic.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8"
-         xmlns:fx="http://javafx.com/fxml/1">
+<fx:root xmlns:fx="http://javafx.com/fxml/1" prefHeight="464.0" prefWidth="224.0" styleClass="storyboard" stylesheets="@../css/storyboard.css, @../css/generic.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8">
    <children>
-   <Label fx:id="storyboardTitle" text="Untitled" pickOnBounds="false"/>
-   <HBox alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="90.0" spacing="4.0" HBox.hgrow="ALWAYS"
-         pickOnBounds="false">
+   <Label fx:id="storyboardTitle" prefWidth="194.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0" />
+   <HBox alignment="TOP_RIGHT" layoutX="197.0" layoutY="-3.0" pickOnBounds="false" prefHeight="36.0" prefWidth="30.0" spacing="4.0" style="-fx-alignment: top_right;" AnchorPane.rightAnchor="0.0">
       <children>
-      <Button mnemonicParsing="false" onAction="#addStory" text="+" styleClass="storyboard-button">
+      <Button mnemonicParsing="false" onAction="#addStory" styleClass="storyboard-button" text="+">
          <font>
-            <Font size="22.0"/>
+            <Font size="22.0" />
          </font>
       </Button>
       </children>
+         <padding>
+            <Insets right="5.0" />
+         </padding>
    </HBox>
-   <VBox fx:id="storyContainer" layoutY="30.0" prefHeight="434.0" prefWidth="224.0" styleClass="container"
-         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-         AnchorPane.topAnchor="30.0"/>
+   <VBox fx:id="storyContainer" layoutY="30.0" pickOnBounds="false" prefHeight="434.0" prefWidth="224.0" styleClass="container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
    </children>
 </fx:root>

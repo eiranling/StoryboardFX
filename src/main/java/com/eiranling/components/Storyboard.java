@@ -1,7 +1,11 @@
-package components;
+package com.eiranling.components;
 
-import _enum.BadgeType;
-import _interface.CanConvertControls;
+import com.eiranling._enum.BadgeType;
+import com.eiranling._interface.CanConvertControls;
+import com.eiranling._interface.Component;
+import com.eiranling._interface.UserEditable;
+import com.eiranling.utils.NodeReplacer;
+import com.eiranling.utils.TextFieldToLabelConverter;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,17 +19,15 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import utils.NodeReplacer;
-import utils.TextFieldToLabelConverter;
 
 import java.io.IOException;
 import java.util.Collection;
 
-import static _enum.DataFormats.BADGE;
-import static _enum.DataFormats.STORY;
+import static com.eiranling._enum.DataFormats.BADGE;
+import static com.eiranling._enum.DataFormats.STORY;
 
-public class Storyboard extends AnchorPane implements CanConvertControls {
-    @FXML private Control storyBoardTitle;
+public class Storyboard extends AnchorPane implements CanConvertControls, UserEditable, Component {
+    @FXML private Control storyboardTitle;
     @FXML private VBox storyContainer;
 
     private StringProperty titleText;
@@ -37,27 +39,39 @@ public class Storyboard extends AnchorPane implements CanConvertControls {
 
     public Storyboard(String title) {
         loadFxml();
+        bind();
         setTitle(title);
+    }
+
+    private void bind() {
+        titleTextProperty().addListener((observable, oldValue, newValue) -> {
+            if (storyboardTitle instanceof Label) ((Label) storyboardTitle).setText(newValue); // Only updates title if the component is a Label
+        });
+
         setOnMouseClicked(evt -> {
             if (evt.getClickCount() == 2 && evt.getButton().equals(MouseButton.PRIMARY) && isUserEditable()) {
                 editTitle();
             }
         });
+
         setOnDragOver(event -> {
             if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasContent(STORY.getDataFormat())) {
                 event.acceptTransferModes(TransferMode.MOVE);
             }
         });
+
         setOnDragEntered(event -> {
             if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasContent(STORY.getDataFormat())) {
                 this.setStyle("-fx-border-width: 5px; -fx-border-color: BLACK");
             }
         });
+
         setOnDragExited(event -> {
             if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasContent(STORY.getDataFormat())) {
                 this.setStyle("");
             }
         });
+
         setOnDragDropped(event -> {
             if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasContent(STORY.getDataFormat())) {
                 Story temp = new Story(event.getDragboard().getContent(STORY.getDataFormat()).toString());
@@ -73,7 +87,8 @@ public class Storyboard extends AnchorPane implements CanConvertControls {
         });
     }
 
-    private void loadFxml() {
+    @Override
+    public void loadFxml() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXML/storyboard.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -136,17 +151,23 @@ public class Storyboard extends AnchorPane implements CanConvertControls {
     public void editTitle() {
         TextField temp = TextFieldToLabelConverter.generateTextField(this);
         temp.setText(titleTextProperty().getValue());
-        NodeReplacer.replaceNode(this, storyBoardTitle, temp);
-        storyBoardTitle = temp;
-        storyBoardTitle.requestFocus();
+        AnchorPane.setLeftAnchor(temp, 0.0);
+        AnchorPane.setRightAnchor(temp, 30.0);
+        AnchorPane.setTopAnchor(temp, 0.0);
+        NodeReplacer.replaceNode(this, storyboardTitle, temp);
+        storyboardTitle = temp;
+        storyboardTitle.requestFocus();
     }
 
 
     @Override
     public void finishEdit(String finalText) {
         Label label = TextFieldToLabelConverter.generateLabel(finalText);
-        NodeReplacer.replaceNode(this, storyBoardTitle, label);
-        storyBoardTitle = label;
+        AnchorPane.setLeftAnchor(label, 0.0);
+        AnchorPane.setRightAnchor(label, 30.0);
+        AnchorPane.setTopAnchor(label, 0.0);
+        NodeReplacer.replaceNode(this, storyboardTitle, label);
+        storyboardTitle = label;
         setTitle(label.getText());
     }
 }

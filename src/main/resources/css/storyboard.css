@@ -3,10 +3,18 @@
     -fx-border-radius: 5;
 }
 
-#storyboardTitle {
+.storyboard > .label {
     -fx-font-size: 15px;
     -fx-padding: 2 0 0 5;
     -fx-font-weight: BOLD;
+    -fx-pref-height: 30;
+}
+
+.storyboard > .text-field {
+    -fx-font-size: 15px;
+    -fx-padding: 2 0 0 5;
+    -fx-font-weight: BOLD;
+    -fx-pref-height: 30;
 }
 
 .storyboard-button {

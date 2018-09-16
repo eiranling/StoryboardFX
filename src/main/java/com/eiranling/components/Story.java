@@ -1,11 +1,10 @@
-package components;
+package com.eiranling.components;
 
-import _enum.BadgeType;
-import _interface.CanConvertControls;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import com.eiranling._enum.BadgeType;
+import com.eiranling._interface.*;
+import com.eiranling.utils.NodeReplacer;
+import com.eiranling.utils.TextFieldToLabelConverter;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Control;
@@ -18,22 +17,22 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import utils.NodeReplacer;
-import utils.TextFieldToLabelConverter;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
-import static _enum.DataFormats.BADGE;
-import static _enum.DataFormats.STORY;
+import static com.eiranling._enum.DataFormats.BADGE;
+import static com.eiranling._enum.DataFormats.STORY;
 
-public class Story extends VBox implements CanConvertControls {
+public class Story<T extends Object> extends VBox implements CanConvertControls, Draggable, UserEditable, Component, CanContainData<T> {
     @FXML private Control title;
     @FXML private HBox badgeContainer;
 
     private StringProperty titleText;
     private BooleanProperty userEditable;
+    private BooleanProperty draggable;
+    private ObjectProperty<T> containedData;
 
     public Story() {
         this("Untitled");
@@ -43,28 +42,6 @@ public class Story extends VBox implements CanConvertControls {
         loadFxml();
         bind();
         setTitle(title);
-        setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY) && isUserEditable()) {
-                editTitle();
-            }
-        });
-        setOnDragDetected(event -> {
-            Dragboard db = this.startDragAndDrop(TransferMode.ANY);
-
-            db.setDragView(this.snapshot(null, null));
-
-            final Collection<BadgeType> badges = new HashSet<>();
-            badgeContainer.getChildren().forEach(b -> badges.add(((Badge) b).getBadgeType()));
-
-            ClipboardContent content = new ClipboardContent();
-            content.put(STORY.getDataFormat(), getTitle());
-            content.put(BADGE.getDataFormat(), badges);
-
-
-            db.setContent(content);
-
-            event.consume();
-        });
 
 
     }
@@ -73,6 +50,35 @@ public class Story extends VBox implements CanConvertControls {
         titleTextProperty().addListener(((observable, oldValue, newValue) -> {
             if (title instanceof Label) ((Label) title).setText(newValue);
         }));
+
+        setOnMouseClicked(event -> {
+            // Sets double click to change title
+            if (event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY) && isUserEditable()) {
+                editTitle();
+            }
+            event.consume();
+        });
+
+        setOnDragDetected(event -> {
+            // Sets drag and drop
+            if (isDraggable()) {
+                Dragboard db = this.startDragAndDrop(TransferMode.ANY);
+
+                db.setDragView(this.snapshot(null, null));
+
+                final Collection<BadgeType> badges = new HashSet<>();
+                badgeContainer.getChildren().forEach(b -> badges.add(((Badge) b).getBadgeType()));
+
+                ClipboardContent content = new ClipboardContent();
+                content.put(STORY.getDataFormat(), getTitle());
+                content.put(BADGE.getDataFormat(), badges);
+
+
+                db.setContent(content);
+            }
+            event.consume();
+        });
+
     }
 
     public void setTitle(String title) {
@@ -88,21 +94,6 @@ public class Story extends VBox implements CanConvertControls {
             titleText = new SimpleStringProperty("Untitled");
         }
         return titleText;
-    }
-
-    public BooleanProperty userEditableProperty() {
-        if (userEditable == null) {
-            userEditable = new SimpleBooleanProperty(true);
-        }
-        return userEditable;
-    }
-
-    public boolean isUserEditable() {
-        return userEditableProperty().getValue();
-    }
-
-    public void setUserEditable(boolean userEditable) {
-        userEditableProperty().setValue(userEditable);
     }
 
     public void addBadge(BadgeType badgeType) {
@@ -138,7 +129,8 @@ public class Story extends VBox implements CanConvertControls {
     }
 
 
-    private void loadFxml() {
+    @Override
+    public void loadFxml() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXML/story.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -152,5 +144,57 @@ public class Story extends VBox implements CanConvertControls {
 
     public void removeFromParent() {
         ((Pane) getParent()).getChildren().remove(this);
+    }
+
+    @Override
+    public BooleanProperty draggableProperty() {
+        if (draggable == null) {
+            draggable = new SimpleBooleanProperty(true);
+        }
+        return draggable;
+    }
+
+    @Override
+    public boolean isDraggable() {
+        return draggableProperty().getValue();
+    }
+
+    @Override
+    public void setDraggable(boolean draggable) {
+        draggableProperty().setValue(draggable);
+    }
+
+    @Override
+    public BooleanProperty userEditableProperty() {
+        if (userEditable == null) {
+            userEditable = new SimpleBooleanProperty(true);
+        }
+        return userEditable;
+    }
+
+    @Override
+    public boolean isUserEditable() {
+        return userEditableProperty().getValue();
+    }
+
+    @Override
+    public void setUserEditable(boolean userEditable) {
+        userEditableProperty().setValue(userEditable);
+    }
+
+    public ObjectProperty<T> containedDataProperty() {
+        if (containedData == null) {
+            containedData = new SimpleObjectProperty<>(null);
+        }
+        return containedData;
+    }
+
+    public T getContainedData() {
+        return containedDataProperty().getValue();
+    }
+
+    @Override
+    public void setContainedData(T data) {
+        containedDataProperty().setValue(data);
     }
 }

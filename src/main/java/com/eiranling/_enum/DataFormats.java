@@ -1,4 +1,4 @@
-package _enum;
+package com.eiranling._enum;
 
 import javafx.scene.input.DataFormat;
 

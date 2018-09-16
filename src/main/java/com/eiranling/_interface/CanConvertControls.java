@@ -1,4 +1,4 @@
-package _interface;
+package com.eiranling._interface;
 
 public interface CanConvertControls {
     void finishEdit(String finalText);

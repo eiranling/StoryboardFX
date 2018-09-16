@@ -1,6 +1,8 @@
-import _enum.BadgeType;
-import components.Story;
-import components.Storyboard;
+package com.eiranling;
+
+import com.eiranling._enum.BadgeType;
+import com.eiranling.components.Story;
+import com.eiranling.components.Storyboard;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
