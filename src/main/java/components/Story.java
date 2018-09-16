@@ -2,7 +2,6 @@ package components;
 
 import _enum.BadgeType;
 import _interface.CanConvertControls;
-import com.google.gson.Gson;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -13,9 +12,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import utils.NodeReplacer;
 import utils.TextFieldToLabelConverter;
@@ -23,18 +24,23 @@ import utils.TextFieldToLabelConverter;
 import java.io.IOException;
 import java.util.*;
 
+import static _enum.DataFormats.BADGE;
+import static _enum.DataFormats.STORY;
+
 public class Story extends VBox implements CanConvertControls {
     @FXML private Control title;
     @FXML private HBox badgeContainer;
 
     private StringProperty titleText;
     private BooleanProperty userEditable;
-    private final DataFormat storyFormat = new DataFormat("title");
-    private final DataFormat badgeFormat = new DataFormat("badge");
-
 
     public Story() {
+        this("Untitled");
+    }
+
+    public Story(String title) {
         loadFxml();
+        setTitle(title);
         setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY) && isUserEditable()) {
                 editTitle();
@@ -43,18 +49,21 @@ public class Story extends VBox implements CanConvertControls {
         setOnDragDetected(event -> {
             Dragboard db = this.startDragAndDrop(TransferMode.ANY);
 
+            db.setDragView(this.snapshot(null, null));
+
             final Collection<BadgeType> badges = new HashSet<>();
             badgeContainer.getChildren().forEach(b -> badges.add(((Badge) b).getBadgeType()));
 
             ClipboardContent content = new ClipboardContent();
-            content.put(storyFormat, getTitle());
-            content.put(badgeFormat, badges);
+            content.put(STORY.getDataFormat(), getTitle());
+            content.put(BADGE.getDataFormat(), badges);
 
 
             db.setContent(content);
 
             event.consume();
         });
+
 
     }
 
@@ -131,5 +140,9 @@ public class Story extends VBox implements CanConvertControls {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+    }
+
+    public void removeFromParent() {
+        ((Pane) getParent()).getChildren().remove(this);
     }
 }

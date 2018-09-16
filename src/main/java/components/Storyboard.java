@@ -3,7 +3,6 @@ package components;
 import _enum.BadgeType;
 import _interface.CanContain;
 import _interface.CanConvertControls;
-import com.google.gson.Gson;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,6 +21,9 @@ import utils.TextFieldToLabelConverter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+
+import static _enum.DataFormats.BADGE;
+import static _enum.DataFormats.STORY;
 
 public class Storyboard extends AnchorPane implements CanConvertControls {
     @FXML private Control storyBoardTitle;
@@ -43,37 +45,32 @@ public class Storyboard extends AnchorPane implements CanConvertControls {
             }
         });
         setOnDragOver(event -> {
-            if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasString()) {
+            if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasContent(STORY.getDataFormat())) {
                 event.acceptTransferModes(TransferMode.MOVE);
             }
-
-            event.consume();
         });
         setOnDragEntered(event -> {
-            if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasString()) {
+            if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasContent(STORY.getDataFormat())) {
                 this.setStyle("-fx-border-width: 5px; -fx-border-color: BLACK");
             }
-            event.consume();
         });
         setOnDragExited(event -> {
-            if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasString()) {
+            if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasContent(STORY.getDataFormat())) {
                 this.setStyle("");
             }
-            event.consume();
         });
         setOnDragDropped(event -> {
-            if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasString()) {
-                Story temp = new Story();
-                for (BadgeType badgeType : (Collection<BadgeType>) event.getDragboard().getContent(new DataFormat("badge"))) {
+            if (!getChildren().contains(event.getGestureSource()) && event.getDragboard().hasContent(STORY.getDataFormat())) {
+                Story temp = new Story(event.getDragboard().getContent(STORY.getDataFormat()).toString());
+                for (BadgeType badgeType : (Collection<BadgeType>) event.getDragboard().getContent(BADGE.getDataFormat())) {
                     temp.addBadge(badgeType);
                 }
-                temp.setTitle(event.getDragboard().getContent(new DataFormat("story")).toString());
-                getChildren().add(temp);
+                addStory(temp);
+                ((Story) event.getGestureSource()).removeFromParent();
                 event.setDropCompleted(true);
             } else {
                 event.setDropCompleted(false);
             }
-            event.consume();
         });
     }
 
