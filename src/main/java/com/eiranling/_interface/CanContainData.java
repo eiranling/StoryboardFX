@@ -1,4 +1,4 @@
-package _interface;
+package com.eiranling._interface;
 
 import javafx.beans.property.ObjectProperty;
 

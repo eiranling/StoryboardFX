@@ -1,4 +1,4 @@
-package utils;
+package com.eiranling.utils;
 
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;

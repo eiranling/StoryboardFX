@@ -1,9 +1,11 @@
-package components;
+package com.eiranling.components;
 
-import _enum.BadgeType;
-import _interface.CanConvertControls;
-import _interface.Component;
-import _interface.UserEditable;
+import com.eiranling._enum.BadgeType;
+import com.eiranling._interface.CanConvertControls;
+import com.eiranling._interface.Component;
+import com.eiranling._interface.UserEditable;
+import com.eiranling.utils.NodeReplacer;
+import com.eiranling.utils.TextFieldToLabelConverter;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,14 +19,12 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import utils.NodeReplacer;
-import utils.TextFieldToLabelConverter;
 
 import java.io.IOException;
 import java.util.Collection;
 
-import static _enum.DataFormats.BADGE;
-import static _enum.DataFormats.STORY;
+import static com.eiranling._enum.DataFormats.BADGE;
+import static com.eiranling._enum.DataFormats.STORY;
 
 public class Storyboard extends AnchorPane implements CanConvertControls, UserEditable, Component {
     @FXML private Control storyboardTitle;

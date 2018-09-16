@@ -1,7 +1,9 @@
-package components;
+package com.eiranling.components;
 
-import _enum.BadgeType;
-import _interface.*;
+import com.eiranling._enum.BadgeType;
+import com.eiranling._interface.*;
+import com.eiranling.utils.NodeReplacer;
+import com.eiranling.utils.TextFieldToLabelConverter;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,15 +17,13 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import utils.NodeReplacer;
-import utils.TextFieldToLabelConverter;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
-import static _enum.DataFormats.BADGE;
-import static _enum.DataFormats.STORY;
+import static com.eiranling._enum.DataFormats.BADGE;
+import static com.eiranling._enum.DataFormats.STORY;
 
 public class Story<T extends Object> extends VBox implements CanConvertControls, Draggable, UserEditable, Component, CanContainData<T> {
     @FXML private Control title;
