@@ -2,6 +2,8 @@ package components;
 
 import _enum.BadgeType;
 import _interface.CanConvertControls;
+import _interface.Component;
+import _interface.UserEditable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,7 +26,7 @@ import java.util.Collection;
 import static _enum.DataFormats.BADGE;
 import static _enum.DataFormats.STORY;
 
-public class Storyboard extends AnchorPane implements CanConvertControls {
+public class Storyboard extends AnchorPane implements CanConvertControls, UserEditable, Component {
     @FXML private Control storyBoardTitle;
     @FXML private VBox storyContainer;
 
@@ -73,7 +75,8 @@ public class Storyboard extends AnchorPane implements CanConvertControls {
         });
     }
 
-    private void loadFxml() {
+    @Override
+    public void loadFxml() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXML/storyboard.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);

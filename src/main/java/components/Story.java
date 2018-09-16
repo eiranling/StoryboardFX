@@ -2,6 +2,7 @@ package components;
 
 import _enum.BadgeType;
 import _interface.CanConvertControls;
+import _interface.Component;
 import _interface.Draggable;
 import _interface.UserEditable;
 import javafx.beans.property.BooleanProperty;
@@ -30,7 +31,7 @@ import java.util.HashSet;
 import static _enum.DataFormats.BADGE;
 import static _enum.DataFormats.STORY;
 
-public class Story extends VBox implements CanConvertControls, Draggable, UserEditable {
+public class Story extends VBox implements CanConvertControls, Draggable, UserEditable, Component {
     @FXML private Control title;
     @FXML private HBox badgeContainer;
 
@@ -132,7 +133,8 @@ public class Story extends VBox implements CanConvertControls, Draggable, UserEd
     }
 
 
-    private void loadFxml() {
+    @Override
+    public void loadFxml() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXML/story.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
