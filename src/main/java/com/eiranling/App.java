@@ -32,7 +32,7 @@ public class App extends Application {
             if (event.getCode().equals(KeyCode.A)) {
                 storyboard.getChildren().forEach(c -> {
                     if (c instanceof VBox) {
-                        ((VBox) c).getChildren().forEach(s -> ((Story) s).addBadge(BadgeType.BADGE_SUCCESS));
+                        ((VBox) c).getChildren().forEach(s -> ((Story) s).addBadge("Blood Test", "badge-failure"));
                     }
                 });
             }

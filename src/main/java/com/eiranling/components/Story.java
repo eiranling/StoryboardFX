@@ -42,8 +42,6 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         loadFxml();
         bind();
         setTitle(title);
-
-
     }
 
     private void bind() {
@@ -189,6 +187,7 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         return containedData;
     }
 
+    @Override
     public T getContainedData() {
         return containedDataProperty().getValue();
     }
