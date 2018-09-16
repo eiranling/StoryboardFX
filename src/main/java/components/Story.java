@@ -1,14 +1,8 @@
 package components;
 
 import _enum.BadgeType;
-import _interface.CanConvertControls;
-import _interface.Component;
-import _interface.Draggable;
-import _interface.UserEditable;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import _interface.*;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Control;
@@ -31,13 +25,14 @@ import java.util.HashSet;
 import static _enum.DataFormats.BADGE;
 import static _enum.DataFormats.STORY;
 
-public class Story extends VBox implements CanConvertControls, Draggable, UserEditable, Component {
+public class Story<T extends Object> extends VBox implements CanConvertControls, Draggable, UserEditable, Component, CanContainData<T> {
     @FXML private Control title;
     @FXML private HBox badgeContainer;
 
     private StringProperty titleText;
     private BooleanProperty userEditable;
     private BooleanProperty draggable;
+    private ObjectProperty<T> containedData;
 
     public Story() {
         this("Untitled");
@@ -184,5 +179,21 @@ public class Story extends VBox implements CanConvertControls, Draggable, UserEd
     @Override
     public void setUserEditable(boolean userEditable) {
         userEditableProperty().setValue(userEditable);
+    }
+
+    public ObjectProperty<T> containedDataProperty() {
+        if (containedData == null) {
+            containedData = new SimpleObjectProperty<>(null);
+        }
+        return containedData;
+    }
+
+    public T getContainedData() {
+        return containedDataProperty().getValue();
+    }
+
+    @Override
+    public void setContainedData(T data) {
+        containedDataProperty().setValue(data);
     }
 }
