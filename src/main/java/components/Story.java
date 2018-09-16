@@ -56,6 +56,7 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
             if (event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY) && isUserEditable()) {
                 editTitle();
             }
+            event.consume();
         });
 
         setOnDragDetected(event -> {
