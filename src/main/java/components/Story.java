@@ -2,6 +2,7 @@ package components;
 
 import _enum.BadgeType;
 import _interface.CanConvertControls;
+import com.google.gson.Gson;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -12,9 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,6 +21,7 @@ import utils.NodeReplacer;
 import utils.TextFieldToLabelConverter;
 
 import java.io.IOException;
+import java.util.*;
 
 public class Story extends VBox implements CanConvertControls {
     @FXML private Control title;
@@ -29,6 +29,9 @@ public class Story extends VBox implements CanConvertControls {
 
     private StringProperty titleText;
     private BooleanProperty userEditable;
+    private final DataFormat storyFormat = new DataFormat("title");
+    private final DataFormat badgeFormat = new DataFormat("badge");
+
 
     public Story() {
         loadFxml();
@@ -37,6 +40,22 @@ public class Story extends VBox implements CanConvertControls {
                 editTitle();
             }
         });
+        setOnDragDetected(event -> {
+            Dragboard db = this.startDragAndDrop(TransferMode.ANY);
+
+            final Collection<BadgeType> badges = new HashSet<>();
+            badgeContainer.getChildren().forEach(b -> badges.add(((Badge) b).getBadgeType()));
+
+            ClipboardContent content = new ClipboardContent();
+            content.put(storyFormat, getTitle());
+            content.put(badgeFormat, badges);
+
+
+            db.setContent(content);
+
+            event.consume();
+        });
+
     }
 
     public void setTitle(String title) {
