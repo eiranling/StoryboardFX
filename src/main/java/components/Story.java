@@ -40,6 +40,7 @@ public class Story extends VBox implements CanConvertControls {
 
     public Story(String title) {
         loadFxml();
+        bind();
         setTitle(title);
         setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY) && isUserEditable()) {
@@ -65,6 +66,12 @@ public class Story extends VBox implements CanConvertControls {
         });
 
 
+    }
+
+    private void bind() {
+        titleTextProperty().addListener(((observable, oldValue, newValue) -> {
+            if (title instanceof Label) ((Label) title).setText(newValue);
+        }));
     }
 
     public void setTitle(String title) {

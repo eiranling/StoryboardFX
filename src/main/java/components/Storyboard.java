@@ -1,7 +1,6 @@
 package components;
 
 import _enum.BadgeType;
-import _interface.CanContain;
 import _interface.CanConvertControls;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -9,7 +8,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,7 +18,6 @@ import utils.TextFieldToLabelConverter;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
 
 import static _enum.DataFormats.BADGE;
 import static _enum.DataFormats.STORY;
