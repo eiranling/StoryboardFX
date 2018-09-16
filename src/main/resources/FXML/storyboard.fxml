@@ -7,30 +7,19 @@
 <?import javafx.scene.text.Font?>
 <fx:root xmlns:fx="http://javafx.com/fxml/1" prefHeight="464.0" prefWidth="224.0" styleClass="storyboard" stylesheets="@../css/storyboard.css, @../css/generic.css" type="AnchorPane" xmlns="http://javafx.com/javafx/8">
    <children>
-      <GridPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" pickOnBounds="false">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="215.0" minWidth="10.0" prefWidth="197.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="94.0" minWidth="9.0" prefWidth="27.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-         <Label fx:id="storyboardTitle" />
-         <HBox alignment="TOP_RIGHT" pickOnBounds="false" prefHeight="25.0" prefWidth="90.0" spacing="4.0" GridPane.columnIndex="1">
-            <children>
-            <Button mnemonicParsing="false" onAction="#addStory" styleClass="storyboard-button" text="+">
-               <font>
-                  <Font size="22.0" />
-               </font>
-            </Button>
-            </children>
-               <padding>
-                  <Insets right="5.0" />
-               </padding>
-         </HBox>
-         </children>
-      </GridPane>
-   <VBox fx:id="storyContainer" layoutY="30.0" prefHeight="434.0" prefWidth="224.0" styleClass="container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
+   <Label fx:id="storyboardTitle" prefWidth="194.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0" />
+   <HBox alignment="TOP_RIGHT" layoutX="197.0" layoutY="-3.0" pickOnBounds="false" prefHeight="36.0" prefWidth="30.0" spacing="4.0" style="-fx-alignment: top_right;" AnchorPane.rightAnchor="0.0">
+      <children>
+      <Button mnemonicParsing="false" onAction="#addStory" styleClass="storyboard-button" text="+">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Button>
+      </children>
+         <padding>
+            <Insets right="5.0" />
+         </padding>
+   </HBox>
+   <VBox fx:id="storyContainer" layoutY="30.0" pickOnBounds="false" prefHeight="434.0" prefWidth="224.0" styleClass="container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
    </children>
 </fx:root>

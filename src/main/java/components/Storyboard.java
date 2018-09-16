@@ -151,6 +151,9 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
     public void editTitle() {
         TextField temp = TextFieldToLabelConverter.generateTextField(this);
         temp.setText(titleTextProperty().getValue());
+        AnchorPane.setLeftAnchor(temp, 0.0);
+        AnchorPane.setRightAnchor(temp, 30.0);
+        AnchorPane.setTopAnchor(temp, 0.0);
         NodeReplacer.replaceNode(this, storyboardTitle, temp);
         storyboardTitle = temp;
         storyboardTitle.requestFocus();
@@ -160,6 +163,9 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
     @Override
     public void finishEdit(String finalText) {
         Label label = TextFieldToLabelConverter.generateLabel(finalText);
+        AnchorPane.setLeftAnchor(label, 0.0);
+        AnchorPane.setRightAnchor(label, 30.0);
+        AnchorPane.setTopAnchor(label, 0.0);
         NodeReplacer.replaceNode(this, storyboardTitle, label);
         storyboardTitle = label;
         setTitle(label.getText());
