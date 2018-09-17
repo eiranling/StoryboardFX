@@ -2,8 +2,8 @@ package com.eiranling.components;
 
 import com.eiranling._enum.BadgeType;
 import com.eiranling._interface.*;
+import com.eiranling.utils.ControlFactory;
 import com.eiranling.utils.NodeReplacer;
-import com.eiranling.utils.TextFieldToLabelConverter;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -113,7 +113,7 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
     }
 
     public void editTitle() {
-        TextField temp = TextFieldToLabelConverter.generateTextField(this);
+        TextField temp = ControlFactory.generateTextField(this);
         temp.setText(titleTextProperty().getValue());
         NodeReplacer.replaceNode(this, title, temp);
         title = temp;
@@ -122,7 +122,7 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
 
     @Override
     public void finishEdit(String finalText) {
-        Label label = TextFieldToLabelConverter.generateLabel(finalText);
+        Label label = ControlFactory.generateLabel(finalText);
         NodeReplacer.replaceNode(this, title, label);
         title = label;
         setTitle(label.getText());

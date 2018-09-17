@@ -9,24 +9,43 @@ import javafx.scene.control.Label;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Badge component used in Story
+ * @see Story
+ */
 public class Badge extends Label {
 
     private StringProperty styleClass;
 
+    /**
+     * Default constructor to create a new badge with a black background and Default text
+     */
     public Badge() {
         this(BadgeType.BADGE_DEFAULT);
     }
 
+    /**
+     * Constructor to create a new badge based on existing badge type
+     * @param badgeType BadgeType containing the text and the styleclass
+     */
     public Badge(BadgeType badgeType) {
         this(badgeType.getBadgeText(), badgeType.getStyleClass());
     }
 
+    /**
+     * Constructor to create a new badge with custom text and a custom styleClass
+     * @param badgeText Text to put into the badge
+     * @param styleClass Styleclass of the badge
+     */
     public Badge(String badgeText, String styleClass) {
         loadFxml();
         bind();
         setBadgeType(badgeText, styleClass);
     }
 
+    /**
+     * Method to bind listeners to properties
+     */
     private void bind() {
         styleClassProperty().addListener((observable, oldVal, newVal) -> {
             getStyleClass().remove(oldVal);
@@ -34,6 +53,10 @@ public class Badge extends Label {
         });
     }
 
+    /**
+     * Returns the styleclass property of this badge
+     * @return The styleclass property of this badge
+     */
     public StringProperty styleClassProperty() {
         if (styleClass == null) {
             styleClass = new SimpleStringProperty(BadgeType.BADGE_DEFAULT.getStyleClass());
@@ -41,14 +64,22 @@ public class Badge extends Label {
         return styleClass;
     }
 
+    /**
+     * Sets the badge type to be a predefined badge
+     * @param badgeType pre-defined badge type
+     */
     public void setBadgeType(BadgeType badgeType) {
-        styleClassProperty().setValue(badgeType.getStyleClass());
-        textProperty().setValue(badgeType.getBadgeText());
+        setBadgeType(badgeType.getBadgeText(), badgeType.getStyleClass());
     }
 
+    /**
+     * Sets the badge type to be a custom badge with badge text and custom styleclasses
+     * @param text Text of the title
+     * @param styleClass
+     */
     public void setBadgeType(String text, String styleClass) {
-        styleClassProperty().setValue(styleClass);
-        textProperty().set(text);
+        setStyle(styleClass);
+        setText(text);
     }
 
     @Override

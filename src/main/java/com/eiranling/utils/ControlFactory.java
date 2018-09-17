@@ -6,7 +6,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public class TextFieldToLabelConverter {
+/**
+ * Factory to generate builtins that inherit the JavaFX Control class
+ */
+public class ControlFactory {
     public static TextField generateTextField(CanConvertControls converter) {
         TextField editTextField = new TextField();
         editTextField.addEventHandler(KeyEvent.KEY_PRESSED, event -> {

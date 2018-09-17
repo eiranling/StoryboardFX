@@ -4,8 +4,8 @@ import com.eiranling._enum.BadgeType;
 import com.eiranling._interface.CanConvertControls;
 import com.eiranling._interface.Component;
 import com.eiranling._interface.UserEditable;
+import com.eiranling.utils.ControlFactory;
 import com.eiranling.utils.NodeReplacer;
-import com.eiranling.utils.TextFieldToLabelConverter;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -149,7 +149,7 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
     }
 
     public void editTitle() {
-        TextField temp = TextFieldToLabelConverter.generateTextField(this);
+        TextField temp = ControlFactory.generateTextField(this);
         temp.setText(titleTextProperty().getValue());
         AnchorPane.setLeftAnchor(temp, 0.0);
         AnchorPane.setRightAnchor(temp, 30.0);
@@ -162,7 +162,7 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
 
     @Override
     public void finishEdit(String finalText) {
-        Label label = TextFieldToLabelConverter.generateLabel(finalText);
+        Label label = ControlFactory.generateLabel(finalText);
         AnchorPane.setLeftAnchor(label, 0.0);
         AnchorPane.setRightAnchor(label, 30.0);
         AnchorPane.setTopAnchor(label, 0.0);
