@@ -2,6 +2,7 @@ package com.eiranling.components;
 
 import com.eiranling._enum.BadgeType;
 import com.eiranling._interface.*;
+import com.eiranling.utils.ComponentLoader;
 import com.eiranling.utils.NodeReplacer;
 import com.eiranling.utils.TextFieldToLabelConverter;
 import javafx.beans.property.*;
@@ -25,8 +26,16 @@ import java.util.HashSet;
 import static com.eiranling._enum.DataFormats.BADGE;
 import static com.eiranling._enum.DataFormats.STORY;
 
-public class Story<T extends Object> extends VBox implements CanConvertControls, Draggable, UserEditable, Component, CanContainData<T> {
+/**
+ * Component for holding user data to move around the Storyboards
+ * @see Storyboard
+ * @param <T> Object type to store in the Story
+ * @author eiran
+ */
+public class Story<T extends Object> extends VBox implements CanConvertControls, Draggable, UserEditable, CanContainData<T> {
+    /** Control item for displaying the title of the story */
     @FXML private Control title;
+    /** Container for holding the badges associated with the Story */
     @FXML private HBox badgeContainer;
 
     private StringProperty titleText;
@@ -34,16 +43,26 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
     private BooleanProperty draggable;
     private ObjectProperty<T> containedData;
 
+    /**
+     * Creates a Story object with the title "Untitled"
+     */
     public Story() {
         this("Untitled");
     }
 
+    /**
+     * Creates a Story object with the specified title
+     * @param title title of the Story object
+     */
     public Story(String title) {
         loadFxml();
         bind();
         setTitle(title);
     }
 
+    /**
+     * Adds event handlers to the story.
+     */
     private void bind() {
         titleTextProperty().addListener(((observable, oldValue, newValue) -> {
             if (title instanceof Label) ((Label) title).setText(newValue);
@@ -64,13 +83,12 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
 
                 db.setDragView(this.snapshot(null, null));
 
-                final Collection<BadgeType> badges = new HashSet<>();
-                badgeContainer.getChildren().forEach(b -> badges.add(((Badge) b).getBadgeType()));
+                final Collection<Badge> badges = new HashSet<>();
+                badgeContainer.getChildren().forEach(b -> badges.add(new Badge(((Badge) b).getText(), ((Badge) b).styleClassProperty().get())));
 
                 ClipboardContent content = new ClipboardContent();
                 content.put(STORY.getDataFormat(), getTitle());
                 content.put(BADGE.getDataFormat(), badges);
-
 
                 db.setContent(content);
             }
@@ -79,14 +97,24 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
 
     }
 
+    /**
+     * Sets the title of the Story instance
+     * @param title title of the Story
+     */
     public void setTitle(String title) {
         titleTextProperty().setValue(title);
     }
 
+    /**
+     * @return The title of the Story
+     */
     public String getTitle() {
         return titleTextProperty().getValue();
     }
 
+    /**
+     * @return the StringProperty of the title
+     */
     public StringProperty titleTextProperty() {
         if (titleText == null) {
             titleText = new SimpleStringProperty("Untitled");
@@ -94,10 +122,19 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         return titleText;
     }
 
+    /**
+     * Adds a pre-defined badge to the Story
+     * @param badgeType pre-defined badge type
+     */
     public void addBadge(BadgeType badgeType) {
         this.addBadge(badgeType.getBadgeText(), badgeType.getStyleClass());
     }
 
+    /**
+     * Adds a custom badge type to the Story
+     * @param badgeText Text to show on the badge to add
+     * @param badgeStyleClass Style class to display with the badge
+     */
     public void addBadge(String badgeText, String badgeStyleClass) {
         Badge badge = new Badge();
         badge.setBadgeType(badgeText, badgeStyleClass);
@@ -106,10 +143,19 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         }
     }
 
-    public void removeBadge(BadgeType badgeType) {
-        badgeContainer.getChildren().remove(new Badge(badgeType));
+    /**
+     * Removes the specified badge from the Story if it exists
+     * @param badge badge to remove from the Story
+     */
+    public void removeBadge(Badge badge) {
+        badgeContainer.getChildren().remove(badge);
     }
 
+    /**
+     * Used to change the title from a Label to a TextField.
+     * By default, this is called on double click, and the title is set with the Enter key being pressed
+     * while the TextField has focus
+     */
     public void editTitle() {
         TextField temp = TextFieldToLabelConverter.generateTextField(this);
         temp.setText(titleTextProperty().getValue());
@@ -118,26 +164,21 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         title.requestFocus();
     }
 
+    /**
+     * Converts the TextField into a Label and sets the title to be the text contained in the
+     * TextField
+     */
     @Override
-    public void finishEdit(String finalText) {
-        Label label = TextFieldToLabelConverter.generateLabel(finalText);
+    public void finishEdit() {
+        Label label = TextFieldToLabelConverter.generateLabel(((TextField) title).getText());
         NodeReplacer.replaceNode(this, title, label);
         title = label;
         setTitle(label.getText());
     }
 
 
-    @Override
-    public void loadFxml() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXML/story.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+    private void loadFxml() {
+        ComponentLoader.loadFXML(getClass().getResource("/FXML/story.fxml"), this);
     }
 
     public void removeFromParent() {

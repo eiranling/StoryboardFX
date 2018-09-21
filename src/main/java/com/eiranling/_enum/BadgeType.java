@@ -1,5 +1,8 @@
 package com.eiranling._enum;
 
+/**
+ * Enum of pre-defined badge types
+ */
 public enum BadgeType {
     BADGE_DEFAULT("Badge", "badge-default"),
     BADGE_SUCCESS("Success", "badge-success"),
@@ -15,10 +18,18 @@ public enum BadgeType {
         this.styleClass = styleClass;
     }
 
+    /**
+     * Gets the pre-defined text for the badge type
+     * @return pre-defined text for the badge
+     */
     public String getBadgeText() {
         return badgeText;
     }
 
+    /**
+     * Gets the pre-defined style class of the BadgeType
+     * @return pre-defined badge style for the badge
+     */
     public String getStyleClass() {
         return styleClass;
     }

@@ -2,8 +2,8 @@ package com.eiranling.components;
 
 import com.eiranling._enum.BadgeType;
 import com.eiranling._interface.CanConvertControls;
-import com.eiranling._interface.Component;
 import com.eiranling._interface.UserEditable;
+import com.eiranling.utils.ComponentLoader;
 import com.eiranling.utils.NodeReplacer;
 import com.eiranling.utils.TextFieldToLabelConverter;
 import javafx.beans.property.BooleanProperty;
@@ -26,7 +26,7 @@ import java.util.Collection;
 import static com.eiranling._enum.DataFormats.BADGE;
 import static com.eiranling._enum.DataFormats.STORY;
 
-public class Storyboard extends AnchorPane implements CanConvertControls, UserEditable, Component {
+public class Storyboard extends AnchorPane implements CanConvertControls, UserEditable {
     @FXML private Control storyboardTitle;
     @FXML private VBox storyContainer;
 
@@ -87,17 +87,8 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
         });
     }
 
-    @Override
-    public void loadFxml() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXML/storyboard.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+    private void loadFxml() {
+        ComponentLoader.loadFXML(getClass().getResource("/FXML/storyboard.fxml"), this);
     }
 
     public StringProperty titleTextProperty() {
@@ -161,8 +152,8 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
 
 
     @Override
-    public void finishEdit(String finalText) {
-        Label label = TextFieldToLabelConverter.generateLabel(finalText);
+    public void finishEdit() {
+        Label label = TextFieldToLabelConverter.generateLabel(((TextField) storyboardTitle).getText());
         AnchorPane.setLeftAnchor(label, 0.0);
         AnchorPane.setRightAnchor(label, 30.0);
         AnchorPane.setTopAnchor(label, 0.0);
