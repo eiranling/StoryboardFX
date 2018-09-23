@@ -1,5 +1,5 @@
 package com.eiranling._interface;
 
 public interface CanConvertControls {
-    void finishEdit(String finalText);
+    void finishEdit();
 }

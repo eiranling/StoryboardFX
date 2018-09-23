@@ -7,9 +7,28 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }
 
-.story > .label {
+.label {
     -fx-font-weight: BOLD;
     -fx-border-insets: 5px;
     -fx-background-insets: 5px;
     -fx-padding: 5px;
+}
+
+.remove-button {
+    -fx-padding: 2 5 0 0;
+    -fx-background-color: TRANSPARENT;
+}
+
+.remove-button > #remove_icon {
+    -fx-fill: GREY;
+    -fx-shape: "M 10 2 L 9 3 L 4 3 L 4 5 L 7 5 L 17 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 20 C 5 21.1 5.9 22 7 22 L 17 22 C 18.1 22 19 21.1 19 20 L 19 7 L 5 7 z";
+}
+
+.remove-button:hover > #remove_icon {
+    -fx-fill: #404040;
+}
+
+
+.remove-button:pressed > #remove_icon {
+    -fx-fill: #101010;
 }

@@ -1,6 +1,7 @@
 package com.eiranling;
 
 import com.eiranling._enum.BadgeType;
+import com.eiranling.components.Badge;
 import com.eiranling.components.Story;
 import com.eiranling.components.Storyboard;
 import javafx.application.Application;
@@ -32,7 +33,7 @@ public class App extends Application {
             if (event.getCode().equals(KeyCode.A)) {
                 storyboard.getChildren().forEach(c -> {
                     if (c instanceof VBox) {
-                        ((VBox) c).getChildren().forEach(s -> ((Story) s).addBadge(BadgeType.BADGE_SUCCESS));
+                        ((VBox) c).getChildren().forEach(s -> ((Story) s).addBadge("Blood Test", "badge-failure"));
                     }
                 });
             }
@@ -42,7 +43,7 @@ public class App extends Application {
             if (event.getCode().equals(KeyCode.S)) {
                 storyboard.getChildren().forEach(c -> {
                     if (c instanceof VBox) {
-                        ((VBox) c).getChildren().forEach(s -> ((Story) s).removeBadge(BadgeType.BADGE_SUCCESS));
+                        ((VBox) c).getChildren().forEach(s -> ((Story) s).removeBadge(new Badge(BadgeType.BADGE_SUCCESS)));
                     }
                 });
             }

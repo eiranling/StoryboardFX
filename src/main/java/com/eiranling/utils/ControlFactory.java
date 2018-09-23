@@ -14,7 +14,7 @@ public class ControlFactory {
         TextField editTextField = new TextField();
         editTextField.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode().equals(KeyCode.ENTER)) {
-                converter.finishEdit(editTextField.getText());
+                converter.finishEdit();
             }
         });
         return editTextField;

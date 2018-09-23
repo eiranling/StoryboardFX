@@ -1,12 +1,19 @@
 package com.eiranling.components;
 
 import com.eiranling._enum.BadgeType;
-import com.eiranling._interface.*;
+import com.eiranling._interface.CanConvertControls;
+import com.eiranling._interface.Draggable;
+import com.eiranling._interface.UserEditable;
+import com.eiranling.utils.ComponentLoader;
 import com.eiranling.utils.ControlFactory;
 import com.eiranling.utils.NodeReplacer;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -18,35 +25,53 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
-import static com.eiranling._enum.DataFormats.BADGE;
-import static com.eiranling._enum.DataFormats.STORY;
+import static com.eiranling._enum.DataFormats.*;
 
-public class Story<T extends Object> extends VBox implements CanConvertControls, Draggable, UserEditable, Component, CanContainData<T> {
+/**
+ * Component for holding user data to move around the Storyboards
+ * @see Storyboard
+ * @param <T> Object type to store in the Story
+ * @author eiran
+ */
+public class Story<T extends Object> extends VBox implements CanConvertControls, Draggable, UserEditable {
+    /** Control item for displaying the title of the story */
     @FXML private Control title;
+    /** Container for holding the badges associated with the Story */
     @FXML private HBox badgeContainer;
+    @FXML private Button remove;
+    @FXML private HBox customNodeContainer;
 
     private StringProperty titleText;
     private BooleanProperty userEditable;
     private BooleanProperty draggable;
     private ObjectProperty<T> containedData;
+    private ListProperty<Node> customControls;
 
+    /**
+     * Creates a Story object with the title "Untitled"
+     */
     public Story() {
         this("Untitled");
     }
 
+    /**
+     * Creates a Story object with the specified title
+     * @param title title of the Story object
+     */
     public Story(String title) {
         loadFxml();
         bind();
         setTitle(title);
-
-
     }
 
+    /**
+     * Adds event handlers to the story.
+     */
     private void bind() {
+
         titleTextProperty().addListener(((observable, oldValue, newValue) -> {
             if (title instanceof Label) ((Label) title).setText(newValue);
         }));
@@ -59,6 +84,9 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
             event.consume();
         });
 
+        setOnMouseEntered(event -> remove.setVisible(true));
+        setOnMouseExited(event -> remove.setVisible(false));
+
         setOnDragDetected(event -> {
             // Sets drag and drop
             if (isDraggable()) {
@@ -66,29 +94,45 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
 
                 db.setDragView(this.snapshot(null, null));
 
-                final Collection<BadgeType> badges = new HashSet<>();
-                badgeContainer.getChildren().forEach(b -> badges.add(((Badge) b).getBadgeType()));
+                final Collection<Badge> badges = new HashSet<>();
+                badgeContainer.getChildren().forEach(b -> badges.add(new Badge(((Badge) b).getText(), ((Badge) b).styleClassProperty().get())));
 
                 ClipboardContent content = new ClipboardContent();
                 content.put(STORY.getDataFormat(), getTitle());
                 content.put(BADGE.getDataFormat(), badges);
-
+                if (getUserData() != null) {
+                    content.put(USER_DATA.getDataFormat(), getUserData());
+                }
 
                 db.setContent(content);
             }
             event.consume();
         });
 
+        customControlsProperty().addListener((ListChangeListener<Node>) c -> {
+            customNodeContainer.getChildren().removeAll(c.getRemoved());
+            customNodeContainer.getChildren().addAll(c.getAddedSubList());
+        });
     }
 
+    /**
+     * Sets the title of the Story instance
+     * @param title title of the Story
+     */
     public void setTitle(String title) {
         titleTextProperty().setValue(title);
     }
 
+    /**
+     * @return The title of the Story
+     */
     public String getTitle() {
         return titleTextProperty().getValue();
     }
 
+    /**
+     * @return the StringProperty of the title
+     */
     public StringProperty titleTextProperty() {
         if (titleText == null) {
             titleText = new SimpleStringProperty("Untitled");
@@ -96,10 +140,19 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         return titleText;
     }
 
+    /**
+     * Adds a pre-defined badge to the Story
+     * @param badgeType pre-defined badge type
+     */
     public void addBadge(BadgeType badgeType) {
         this.addBadge(badgeType.getBadgeText(), badgeType.getStyleClass());
     }
 
+    /**
+     * Adds a custom badge type to the Story
+     * @param badgeText Text to show on the badge to add
+     * @param badgeStyleClass Style class to display with the badge
+     */
     public void addBadge(String badgeText, String badgeStyleClass) {
         Badge badge = new Badge();
         badge.setBadgeType(badgeText, badgeStyleClass);
@@ -108,38 +161,42 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         }
     }
 
-    public void removeBadge(BadgeType badgeType) {
-        badgeContainer.getChildren().remove(new Badge(badgeType));
+    /**
+     * Removes the specified badge from the Story if it exists
+     * @param badge badge to remove from the Story
+     */
+    public void removeBadge(Badge badge) {
+        badgeContainer.getChildren().remove(badge);
     }
 
+    /**
+     * Used to change the title from a Label to a TextField.
+     * By default, this is called on double click, and the title is set with the Enter key being pressed
+     * while the TextField has focus
+     */
     public void editTitle() {
         TextField temp = ControlFactory.generateTextField(this);
         temp.setText(titleTextProperty().getValue());
-        NodeReplacer.replaceNode(this, title, temp);
+        NodeReplacer.replaceNode((Pane) title.getParent(), title, temp);
         title = temp;
         title.requestFocus();
     }
 
+    /**
+     * Converts the TextField into a Label and sets the title to be the text contained in the
+     * TextField
+     */
     @Override
-    public void finishEdit(String finalText) {
-        Label label = ControlFactory.generateLabel(finalText);
-        NodeReplacer.replaceNode(this, title, label);
+    public void finishEdit() {
+        Label label = ControlFactory.generateLabel(((TextField) title).getText());
+        NodeReplacer.replaceNode((Pane) title.getParent(), title, label);
         title = label;
         setTitle(label.getText());
     }
 
 
-    @Override
-    public void loadFxml() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXML/story.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+    private void loadFxml() {
+        ComponentLoader.loadFXML(getClass().getResource("/FXML/story.fxml"), this);
     }
 
     public void removeFromParent() {
@@ -182,19 +239,18 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         userEditableProperty().setValue(userEditable);
     }
 
-    public ObjectProperty<T> containedDataProperty() {
-        if (containedData == null) {
-            containedData = new SimpleObjectProperty<>(null);
+    public ListProperty<Node> customControlsProperty() {
+        if (customControls == null) {
+            customControls = new SimpleListProperty<>(FXCollections.observableArrayList());
         }
-        return containedData;
+        return customControls;
     }
 
-    public T getContainedData() {
-        return containedDataProperty().getValue();
+    public ObservableList<Node> getCustomControls() {
+        return customControlsProperty().get();
     }
 
-    @Override
-    public void setContainedData(T data) {
-        containedDataProperty().setValue(data);
+    public void setCustomControls(ObservableList<Node> nodes) {
+        customControlsProperty().set(nodes);
     }
 }

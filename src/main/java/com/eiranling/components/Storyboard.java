@@ -2,16 +2,12 @@ package com.eiranling.components;
 
 import com.eiranling._enum.BadgeType;
 import com.eiranling._interface.CanConvertControls;
-import com.eiranling._interface.Component;
 import com.eiranling._interface.UserEditable;
+import com.eiranling.utils.ComponentLoader;
 import com.eiranling.utils.ControlFactory;
 import com.eiranling.utils.NodeReplacer;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -19,19 +15,19 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
-import java.io.IOException;
 import java.util.Collection;
 
-import static com.eiranling._enum.DataFormats.BADGE;
-import static com.eiranling._enum.DataFormats.STORY;
+import static com.eiranling._enum.DataFormats.*;
 
-public class Storyboard extends AnchorPane implements CanConvertControls, UserEditable, Component {
+public class Storyboard extends AnchorPane implements CanConvertControls, UserEditable {
     @FXML private Control storyboardTitle;
     @FXML private VBox storyContainer;
 
     private StringProperty titleText;
     private BooleanProperty userEditable;
+    private ObjectProperty<Callback<Storyboard, Story>> storyFactory;
 
     public Storyboard() {
         this("Untitled");
@@ -78,6 +74,9 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
                 for (BadgeType badgeType : (Collection<BadgeType>) event.getDragboard().getContent(BADGE.getDataFormat())) {
                     temp.addBadge(badgeType);
                 }
+                if (event.getDragboard().hasContent(USER_DATA.getDataFormat())) {
+                    temp.setUserData(event.getDragboard().getContent(USER_DATA.getDataFormat()));
+                }
                 addStory(temp);
                 ((Story) event.getGestureSource()).removeFromParent();
                 event.setDropCompleted(true);
@@ -87,17 +86,8 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
         });
     }
 
-    @Override
-    public void loadFxml() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXML/storyboard.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+    private void loadFxml() {
+        ComponentLoader.loadFXML(getClass().getResource("/FXML/storyboard.fxml"), this);
     }
 
     public StringProperty titleTextProperty() {
@@ -132,7 +122,7 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
 
     @FXML
     public void addStory() {
-        this.addStory(new Story());
+        this.addStory(getStoryFactory().call(this));
     }
 
     public void addStory(Story story) {
@@ -161,13 +151,28 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
 
 
     @Override
-    public void finishEdit(String finalText) {
-        Label label = ControlFactory.generateLabel(finalText);
+    public void finishEdit() {
+        Label label = ControlFactory.generateLabel(((TextField) storyboardTitle).getText());
         AnchorPane.setLeftAnchor(label, 0.0);
         AnchorPane.setRightAnchor(label, 30.0);
         AnchorPane.setTopAnchor(label, 0.0);
         NodeReplacer.replaceNode(this, storyboardTitle, label);
         storyboardTitle = label;
         setTitle(label.getText());
+    }
+
+    public ObjectProperty<Callback<Storyboard, Story>> storyFactoryProperty() {
+        if (storyFactory == null) {
+            storyFactory = new SimpleObjectProperty<>(param -> new Story("Untitled"));
+        }
+        return storyFactory;
+    }
+
+    public Callback<Storyboard, Story> getStoryFactory() {
+        return storyFactoryProperty().get();
+    }
+
+    public void setStoryFactory(Callback<Storyboard, Story> factory) {
+        storyFactoryProperty().set(factory);
     }
 }
