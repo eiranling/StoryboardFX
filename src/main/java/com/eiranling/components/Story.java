@@ -1,13 +1,19 @@
 package com.eiranling.components;
 
 import com.eiranling._enum.BadgeType;
-import com.eiranling._interface.*;
+import com.eiranling._interface.CanConvertControls;
+import com.eiranling._interface.Draggable;
+import com.eiranling._interface.UserEditable;
 import com.eiranling.utils.ComponentLoader;
 import com.eiranling.utils.NodeReplacer;
 import com.eiranling.utils.TextFieldToLabelConverter;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -19,12 +25,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
-import static com.eiranling._enum.DataFormats.BADGE;
-import static com.eiranling._enum.DataFormats.STORY;
+import static com.eiranling._enum.DataFormats.*;
 
 /**
  * Component for holding user data to move around the Storyboards
@@ -32,16 +36,19 @@ import static com.eiranling._enum.DataFormats.STORY;
  * @param <T> Object type to store in the Story
  * @author eiran
  */
-public class Story<T extends Object> extends VBox implements CanConvertControls, Draggable, UserEditable, CanContainData<T> {
+public class Story<T extends Object> extends VBox implements CanConvertControls, Draggable, UserEditable {
     /** Control item for displaying the title of the story */
     @FXML private Control title;
     /** Container for holding the badges associated with the Story */
     @FXML private HBox badgeContainer;
+    @FXML private Button remove;
+    @FXML private HBox customNodeContainer;
 
     private StringProperty titleText;
     private BooleanProperty userEditable;
     private BooleanProperty draggable;
     private ObjectProperty<T> containedData;
+    private ListProperty<Node> customControls;
 
     /**
      * Creates a Story object with the title "Untitled"
@@ -64,6 +71,7 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
      * Adds event handlers to the story.
      */
     private void bind() {
+
         titleTextProperty().addListener(((observable, oldValue, newValue) -> {
             if (title instanceof Label) ((Label) title).setText(newValue);
         }));
@@ -75,6 +83,9 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
             }
             event.consume();
         });
+
+        setOnMouseEntered(event -> remove.setVisible(true));
+        setOnMouseExited(event -> remove.setVisible(false));
 
         setOnDragDetected(event -> {
             // Sets drag and drop
@@ -89,12 +100,19 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
                 ClipboardContent content = new ClipboardContent();
                 content.put(STORY.getDataFormat(), getTitle());
                 content.put(BADGE.getDataFormat(), badges);
+                if (getUserData() != null) {
+                    content.put(USER_DATA.getDataFormat(), getUserData());
+                }
 
                 db.setContent(content);
             }
             event.consume();
         });
 
+        customControlsProperty().addListener((ListChangeListener<Node>) c -> {
+            customNodeContainer.getChildren().removeAll(c.getRemoved());
+            customNodeContainer.getChildren().addAll(c.getAddedSubList());
+        });
     }
 
     /**
@@ -159,7 +177,7 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
     public void editTitle() {
         TextField temp = TextFieldToLabelConverter.generateTextField(this);
         temp.setText(titleTextProperty().getValue());
-        NodeReplacer.replaceNode(this, title, temp);
+        NodeReplacer.replaceNode((Pane) title.getParent(), title, temp);
         title = temp;
         title.requestFocus();
     }
@@ -171,7 +189,7 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
     @Override
     public void finishEdit() {
         Label label = TextFieldToLabelConverter.generateLabel(((TextField) title).getText());
-        NodeReplacer.replaceNode(this, title, label);
+        NodeReplacer.replaceNode((Pane) title.getParent(), title, label);
         title = label;
         setTitle(label.getText());
     }
@@ -221,20 +239,18 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         userEditableProperty().setValue(userEditable);
     }
 
-    public ObjectProperty<T> containedDataProperty() {
-        if (containedData == null) {
-            containedData = new SimpleObjectProperty<>(null);
+    public ListProperty<Node> customControlsProperty() {
+        if (customControls == null) {
+            customControls = new SimpleListProperty<>(FXCollections.observableArrayList());
         }
-        return containedData;
+        return customControls;
     }
 
-    @Override
-    public T getContainedData() {
-        return containedDataProperty().getValue();
+    public ObservableList<Node> getCustomControls() {
+        return customControlsProperty().get();
     }
 
-    @Override
-    public void setContainedData(T data) {
-        containedDataProperty().setValue(data);
+    public void setCustomControls(ObservableList<Node> nodes) {
+        customControlsProperty().set(nodes);
     }
 }

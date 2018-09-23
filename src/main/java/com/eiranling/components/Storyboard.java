@@ -6,12 +6,8 @@ import com.eiranling._interface.UserEditable;
 import com.eiranling.utils.ComponentLoader;
 import com.eiranling.utils.NodeReplacer;
 import com.eiranling.utils.TextFieldToLabelConverter;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -19,12 +15,11 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
-import java.io.IOException;
 import java.util.Collection;
 
-import static com.eiranling._enum.DataFormats.BADGE;
-import static com.eiranling._enum.DataFormats.STORY;
+import static com.eiranling._enum.DataFormats.*;
 
 public class Storyboard extends AnchorPane implements CanConvertControls, UserEditable {
     @FXML private Control storyboardTitle;
@@ -32,6 +27,7 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
 
     private StringProperty titleText;
     private BooleanProperty userEditable;
+    private ObjectProperty<Callback<Storyboard, Story>> storyFactory;
 
     public Storyboard() {
         this("Untitled");
@@ -78,6 +74,9 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
                 for (BadgeType badgeType : (Collection<BadgeType>) event.getDragboard().getContent(BADGE.getDataFormat())) {
                     temp.addBadge(badgeType);
                 }
+                if (event.getDragboard().hasContent(USER_DATA.getDataFormat())) {
+                    temp.setUserData(event.getDragboard().getContent(USER_DATA.getDataFormat()));
+                }
                 addStory(temp);
                 ((Story) event.getGestureSource()).removeFromParent();
                 event.setDropCompleted(true);
@@ -123,7 +122,7 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
 
     @FXML
     public void addStory() {
-        this.addStory(new Story());
+        this.addStory(getStoryFactory().call(this));
     }
 
     public void addStory(Story story) {
@@ -160,5 +159,20 @@ public class Storyboard extends AnchorPane implements CanConvertControls, UserEd
         NodeReplacer.replaceNode(this, storyboardTitle, label);
         storyboardTitle = label;
         setTitle(label.getText());
+    }
+
+    public ObjectProperty<Callback<Storyboard, Story>> storyFactoryProperty() {
+        if (storyFactory == null) {
+            storyFactory = new SimpleObjectProperty<>(param -> new Story("Untitled"));
+        }
+        return storyFactory;
+    }
+
+    public Callback<Storyboard, Story> getStoryFactory() {
+        return storyFactoryProperty().get();
+    }
+
+    public void setStoryFactory(Callback<Storyboard, Story> factory) {
+        storyFactoryProperty().set(factory);
     }
 }

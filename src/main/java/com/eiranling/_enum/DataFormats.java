@@ -7,7 +7,8 @@ import javafx.scene.input.DataFormat;
  */
 public enum DataFormats {
     STORY(new DataFormat("story")),
-    BADGE(new DataFormat("badge"));
+    BADGE(new DataFormat("badge")),
+    USER_DATA(new DataFormat("user_data"));
 
     private DataFormat dataFormat;
 
