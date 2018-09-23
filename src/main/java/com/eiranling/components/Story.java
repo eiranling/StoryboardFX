@@ -5,8 +5,8 @@ import com.eiranling._interface.CanConvertControls;
 import com.eiranling._interface.Draggable;
 import com.eiranling._interface.UserEditable;
 import com.eiranling.utils.ComponentLoader;
+import com.eiranling.utils.ControlFactory;
 import com.eiranling.utils.NodeReplacer;
-import com.eiranling.utils.TextFieldToLabelConverter;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -175,7 +175,7 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
      * while the TextField has focus
      */
     public void editTitle() {
-        TextField temp = TextFieldToLabelConverter.generateTextField(this);
+        TextField temp = ControlFactory.generateTextField(this);
         temp.setText(titleTextProperty().getValue());
         NodeReplacer.replaceNode((Pane) title.getParent(), title, temp);
         title = temp;
@@ -188,7 +188,7 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
      */
     @Override
     public void finishEdit() {
-        Label label = TextFieldToLabelConverter.generateLabel(((TextField) title).getText());
+        Label label = ControlFactory.generateLabel(((TextField) title).getText());
         NodeReplacer.replaceNode((Pane) title.getParent(), title, label);
         title = label;
         setTitle(label.getText());

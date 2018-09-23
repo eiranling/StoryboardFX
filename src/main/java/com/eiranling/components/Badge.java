@@ -80,8 +80,8 @@ public class Badge extends Label {
      * @param styleClass style class to style the Badge instance with
      */
     public void setBadgeType(String text, String styleClass) {
-        styleClassProperty().setValue(styleClass);
-        textProperty().set(text);
+        setStyle(styleClass);
+        setText(text);
     }
 
     @Override
