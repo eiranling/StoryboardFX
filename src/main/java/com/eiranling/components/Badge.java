@@ -36,7 +36,7 @@ public class Badge extends Label {
     /**
      * Constructor to create a custom Badge with different text and style class
      * @param badgeText Text to appear on the badge
-     * @param styleClass Style class to apply to the Badge
+     * @param styleClass ButtonStyle class to apply to the Badge
      */
     public Badge(String badgeText, String styleClass) {
         loadFxml();

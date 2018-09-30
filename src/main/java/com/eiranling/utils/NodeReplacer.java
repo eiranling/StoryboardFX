@@ -1,7 +1,12 @@
 package com.eiranling.utils;
 
+import com.eiranling._enum.ButtonStyle;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * This class serves as a utility class to replace given nodes
@@ -22,5 +27,17 @@ public class NodeReplacer {
             }
             return node;
         });
+    }
+
+    /**
+     * Helper function to remove any old button styles on the button and apply only the new one
+     * @param button button to apply button style to
+     * @param buttonStyle button style to apply
+     */
+    public static void changeButtonType(Button button, ButtonStyle buttonStyle) {
+        Arrays.asList(ButtonStyle.values()).forEach(c -> {
+            button.getStyleClass().remove(c.getStyleClass());
+        });
+        button.getStyleClass().add(buttonStyle.getStyleClass());
     }
 }

@@ -1,6 +1,7 @@
 package com.eiranling.components;
 
 import com.eiranling._enum.BadgeType;
+import com.eiranling._enum.ButtonStyle;
 import com.eiranling._interface.CanConvertControls;
 import com.eiranling._interface.Draggable;
 import com.eiranling._interface.UserEditable;
@@ -36,12 +37,13 @@ import static com.eiranling._enum.DataFormats.*;
  * @param <T> Object type to store in the Story
  * @author eiran
  */
-public class Story<T extends Object> extends VBox implements CanConvertControls, Draggable, UserEditable {
+public class Story<T> extends VBox implements CanConvertControls, Draggable, UserEditable {
     /** Control item for displaying the title of the story */
     @FXML private Control title;
     /** Container for holding the badges associated with the Story */
     @FXML private HBox badgeContainer;
     @FXML private Button remove;
+    @FXML private Button edit;
     @FXML private HBox customNodeContainer;
 
     private StringProperty titleText;
@@ -84,8 +86,14 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
             event.consume();
         });
 
-        setOnMouseEntered(event -> remove.setVisible(true));
-        setOnMouseExited(event -> remove.setVisible(false));
+        setOnMouseEntered(event -> {
+            edit.setVisible(true);
+            remove.setVisible(true);
+        });
+        setOnMouseExited(event -> {
+            edit.setVisible(false);
+            remove.setVisible(false);
+        });
 
         setOnDragDetected(event -> {
             // Sets drag and drop
@@ -110,8 +118,10 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         });
 
         customControlsProperty().addListener((ListChangeListener<Node>) c -> {
-            customNodeContainer.getChildren().removeAll(c.getRemoved());
-            customNodeContainer.getChildren().addAll(c.getAddedSubList());
+            while (c.next()) {
+                customNodeContainer.getChildren().removeAll(c.getRemoved());
+                customNodeContainer.getChildren().addAll(c.getAddedSubList());
+            }
         });
     }
 
@@ -151,7 +161,7 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
     /**
      * Adds a custom badge type to the Story
      * @param badgeText Text to show on the badge to add
-     * @param badgeStyleClass Style class to display with the badge
+     * @param badgeStyleClass ButtonStyle class to display with the badge
      */
     public void addBadge(String badgeText, String badgeStyleClass) {
         Badge badge = new Badge();
@@ -180,6 +190,8 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         NodeReplacer.replaceNode((Pane) title.getParent(), title, temp);
         title = temp;
         title.requestFocus();
+        NodeReplacer.changeButtonType(edit, ButtonStyle.CONFIRM);
+        edit.setOnAction(e -> finishEdit());
     }
 
     /**
@@ -192,6 +204,8 @@ public class Story<T extends Object> extends VBox implements CanConvertControls,
         NodeReplacer.replaceNode((Pane) title.getParent(), title, label);
         title = label;
         setTitle(label.getText());
+        NodeReplacer.changeButtonType(edit, ButtonStyle.EDIT);
+        edit.setOnAction(e -> editTitle());
     }
 
 
