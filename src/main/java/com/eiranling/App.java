@@ -6,6 +6,7 @@ import com.eiranling.components.Story;
 import com.eiranling.components.Storyboard;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -26,6 +27,9 @@ public class App extends Application {
             if (event.getCode().equals(KeyCode.ENTER)) {
                 Story temp = new Story();
                 temp.setTitle("Story ");
+                Button wow = new Button("Wow");
+                wow.setOnAction(e -> System.out.println("I work!"));
+                temp.customControlsProperty().add(wow);
                 storyboard.addStory(temp);
             }
         });
@@ -49,6 +53,7 @@ public class App extends Application {
                 });
             }
         });
+
 
         anchorPane.getChildren().add(storyboard);
         anchorPane.setPrefWidth(Double.MAX_VALUE);

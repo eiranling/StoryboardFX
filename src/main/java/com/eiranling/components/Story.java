@@ -118,8 +118,10 @@ public class Story<T> extends VBox implements CanConvertControls, Draggable, Use
         });
 
         customControlsProperty().addListener((ListChangeListener<Node>) c -> {
-            customNodeContainer.getChildren().removeAll(c.getRemoved());
-            customNodeContainer.getChildren().addAll(c.getAddedSubList());
+            while (c.next()) {
+                customNodeContainer.getChildren().removeAll(c.getRemoved());
+                customNodeContainer.getChildren().addAll(c.getAddedSubList());
+            }
         });
     }
 
