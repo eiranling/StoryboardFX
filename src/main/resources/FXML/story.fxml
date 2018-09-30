@@ -4,16 +4,19 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.SVGPath?>
+
 <fx:root xmlns:fx="http://javafx.com/fxml/1" prefHeight="99.0" prefWidth="225.0" styleClass="story" stylesheets="@../css/story.css, @../css/generic.css" type="VBox" xmlns="http://javafx.com/javafx/8">
    <HBox stylesheets="@../css/story.css">
       <children>
           <Label fx:id="title" alignment="TOP_LEFT" text="Untitled" wrapText="true" />
+         <Button fx:id="edit" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="edit-button" onAction="#editTitle" visible="false"/>
          <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
             <children>
                <Button fx:id="remove" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#removeFromParent" styleClass="remove-button" visible="false">
                   <graphic>
                      <SVGPath fx:id="remove_icon" content="M 10 2 L 9 3 L 4 3 L 4 5 L 7 5 L 17 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 5 7 L 5 20 C 5 21.1 5.9 22 7 22 L 17 22 C 18.1 22 19 21.1 19 20 L 19 7 L 5 7 z" style="-fx-scale-x: 0.8; -fx-scale-y: 0.8;" />
-                  </graphic></Button>
+                  </graphic>
+               </Button>
             </children>
          </HBox>
       </children>

@@ -14,6 +14,37 @@
     -fx-padding: 5px;
 }
 
+.edit-button {
+    -fx-scale-x: 0.75;
+    -fx-scale-y: 0.75;
+    -fx-background-color: GREY;
+    /* https://www.iconfinder.com/icons/353430/checkbox_edit_pen_pencil_icon */
+    -fx-shape: "M41.393,50.403H12.587V21.597h20.329l5.01-5H10.82c-1.779,0-3.234,1.455-3.234,3.234v32.339 c0,1.779,1.455,3.234,3.234,3.234h32.339c1.779,0,3.234-1.455,3.234-3.234V29.049l-5,4.991V50.403,M55.736,13.636l-4.368-4.362c-0.451-0.451-1.044-0.677-1.636-0.677c-0.592,0-1.184,0.225-1.635,0.676l-3.494,3.484 l7.639,7.626l3.494-3.483C56.639,15.998,56.639,14.535,55.736,13.636,M21.922,35.396 29.562,43.023 50.607,22.017 42.967,14.39,M20.273,37.028 18.642,46.28 27.913,44.654z";
+}
+
+.edit-button:hover {
+    -fx-background-color: #404040;
+}
+
+.edit-button:pressed {
+    -fx-background-color: #101010;
+}
+
+.confirm-button {
+    -fx-scale-x: 0.75;
+    -fx-scale-y: 0.6;
+    -fx-shape: "M1671 566q0 40-28 68l-724 724-136 136q-28 28-68 28t-68-28l-136-136-362-362q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 295 656-657q28-28 68-28t68 28l136 136q28 28 28 68z";
+    -fx-background-color: GREY;
+}
+
+.confirm-button:hover {
+    -fx-background-color: #404040;
+}
+
+.confirm-button:pressed {
+    -fx-background-color: #101010;
+}
+
 .remove-button {
     -fx-padding: 2 5 0 0;
     -fx-background-color: TRANSPARENT;
