@@ -1,4 +1,4 @@
-## StoryboardFX
+## StoryboardFX (WIP)
 
 StoryboardFX is a library built for JavaFX to create highly customisable storyboards in javaFX. All components provided are compatible with SceneBuilder as well.
 
